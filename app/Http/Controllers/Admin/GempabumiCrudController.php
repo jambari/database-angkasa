@@ -6,6 +6,7 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use App\Models\Gempabumi;
 use Excel;
 use Validator;
+use Alert;
 
 // VALIDATION: change the requests to match your own file names if you need form validation
 use App\Http\Requests\StoreGempabumiRequest as StoreRequest;
@@ -172,74 +173,6 @@ class GempabumiCrudController extends CrudController {
         //$this->crud->addButton('top','importgempa', 'importgempa','importgempa');
     }
 
-    public function importExcel (Request $request) 
-    {
-        // validasi untuk memastikan file yang diupload adalah excel
-        $this->validate($request, [ 'excel' => 'required|mimes:xls,xlsx' ]);
-        // ambil file yang baru diupload
-        $excel = $request->file('excel');
-        // baca sheet pertama
-        $excels = Excel::selectSheetsByIndex(0)->load($excel, function($reader) {
-        // options, jika ada
-        })->get();
-
-        // rule untuk validasi setiap row pada file excel
-        $rowRules = [
-            'tanggal' => 'required',
-            'waktu' => 'required',
-            'lintang' => 'required|min:4|max:5',
-            'bujur'=> 'required|min:3|max:6',
-            'magnitudo' => 'required|min:1|max:3',
-            'kedalaman' => 'required|min:2|max:3',
-            'lokasi' =>'required',
-        ];
-
-        // Catat semua id gempa baru
-        // ID ini kita butuhkan untuk menghitung total gempa yang berhasil diimport
-        $gempabumis_id = [];
-
-        // looping setiap baris, mulai dari baris ke 2 (karena baris ke 1 adalah nama kolom)
-        foreach ($excels as $row) {
-          // Membuat validasi untuk row di excel
-          // Disini kita ubah baris yang sedang di proses menjadi array
-          $validator = Validator::make($row->toArray(), $rowRules);
-
-          // Skip baris ini jika tidak valid, langsung ke baris selanjutnya
-          if ($validator->fails()) continue;
-
-          // Syntax dibawah dieksekusi jika baris excel ini valid
-          // buat gempa baru
-          $gempabumi = Gempabumi::insert([
-            'tanggal' => $row['tanggal'],
-            'waktu' => $row['waktu'],
-            'lintang' => $row['lintang'],
-            'bujur' => $row['bujur'],
-            'magnitudo' => $row['magnitudo'],
-            'kedalaman' => $row['kedalaman'],
-            'lokasi' => $row['lokasi'],
-            'terasa' => $row['terasa'],
-            'dirasakan' => $row['dirasakan'],
-            'pga_z' => $row['pga_z'],
-            'pga_ns' => $row['pga_ns'],
-            'pga_ew' => $row['pga_ew'],
-            'sumber' => $row['sumber']
-          ]);
-
-          // catat id dari gempabumi yang baru dibuat
-        array_push($gempabumis_id, $gempabumi->id);
-        }
-
-        // Ambil semua buku yang baru dibuat
-        //$gempabumis = Gempabumi::whereIn('id', $gempabumis_id)->get();
-        //if ($gempabumis->count() == 0) {
-          //  return redirect()->back();
-        //}
-
-        // Tampilkan index gempabumi
-       return redirect('admin/gempabumi');
-    }
-
-
     public function store(StoreRequest $request)
     {
         return parent::storeCrud();
@@ -256,5 +189,58 @@ class GempabumiCrudController extends CrudController {
     {
         $gempas = $this->crud->getEntry($id);
         return view('vendor.backpack.crud.gempabumi_details_row', compact('gempas'));
+    }
+
+    public function importExcel(Request $request)
+    {
+        $this->validate($request, [ 'excel' => 'required|mimes:xls,xlsx']); 
+        if($request->hasFile('excel')){
+        $path = $request->file('excel')->getRealPath();
+
+        $rowRules = [
+            'tanggal' => 'required',
+            'waktu' => 'required',
+            'lintang' => 'required|min:4|max:5',
+            'bujur'=> 'required|min:3|max:6',
+            'magnitudo' => 'required|min:1|max:3',
+            'kedalaman' => 'required|min:2|max:3',
+            'lokasi' =>'required'
+        ];
+
+        $data = Excel::load($path, function($reader) {})->get();
+            if(!empty($data) && $data->count()){
+                foreach ($data->toArray() as $key => $rows) {
+                    //$validator = Validator::make($rows->toArray(), $rowRules);
+                    //if ($validator->fails()) continue ;
+                    if(!empty($rows)){
+                        foreach ($rows as $row) {        
+                            $insert[] = [
+                                    'tanggal' => $row['tanggal'],
+                                    'waktu' => $row['waktu'],
+                                    'lintang' => $row['lintang'],
+                                    'bujur' => $row['bujur'],
+                                    'magnitudo' => $row['magnitudo'],
+                                    'kedalaman' => $row['kedalaman'],
+                                    'lokasi' => $row['lokasi'],
+                                    'terasa' => $row['terasa'],
+                                    'dirasakan' => $row['dirasakan'],
+                                    'pga_z' => $row['pga_z'],
+                                    'pga_ns' => $row['pga_ns'],
+                                    'pga_ew' => $row['pga_ew'],
+                                    'sumber' => $row['sumber']
+                            ];
+
+                        }
+                    }
+                }
+                if(!empty($insert)){
+                        Gempabumi::insert($insert);
+                        \Alert::success('Data berhasil ditambahkan')->flash();
+                    return redirect('admin/gempabumi');
+                }
+            }
+        }
+        \Alert::error('Ada yang salah dengan data anda, tolong perbaiki')->flash();
+        return back();
     }
 }
