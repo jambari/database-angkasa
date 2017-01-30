@@ -21,6 +21,22 @@
           <!-- ================================================ -->
           <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/dashboard') }}"><i class="fa fa-dashboard"></i> <span>{{ trans('backpack::base.dashboard') }}</span></a></li>
           
+          {{-- OPERASIONAL CRUD --}}
+          @role('observer')
+          <li class="treeview">
+            <a href="#"><i class="wi wi-earthquake"></i><span>Gempabumi</span></a>
+            <ul class="treeview-menu">
+              <li>
+                <a href="{{ url('admin/gempabumi') }}"><i class="wi wi-earthquake"></i> <span>Gempabumi</span></a>
+              </li>
+              <li>
+                <a href="{{ url('admin/import/gempabumi') }}"><i class="wi wi-earthquake"></i> <span>Import Gempabumi</span></a>
+              </li>
+            </ul>
+          </li>
+          @endrole
+
+
           <li><a href="{{ url('admin/page') }}"><i class="fa fa-file-o"></i> <span>Pages</span></a></li>
           <!--FILE MANAGER-->
           <li><a href="{{ url(config('backpack.base.route_prefix', 'admin') . '/elfinder') }}"><i class="fa fa-files-o"></i> <span>File manager</span></a></li>

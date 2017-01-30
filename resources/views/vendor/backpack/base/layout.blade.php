@@ -29,6 +29,12 @@
 
     <!-- BackPack Base CSS -->
     <link rel="stylesheet" href="{{ asset('vendor/backpack/backpack.base.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/adminlte/') }}/dist/css/weather-icons.min.css">
+
+    {{-- Jeasyui --}}
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendor/adminlte/') }}/dist/js/jeasyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendor/adminlte/') }}/dist/js/jeasyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('vendor/adminlte/') }}/dist/js/jeasyui/themes/color.css">
 
     @yield('after_styles')
 
@@ -109,6 +115,8 @@
     <script src="{{ asset('vendor/adminlte') }}/plugins/slimScroll/jquery.slimscroll.min.js"></script>
     <script src="{{ asset('vendor/adminlte') }}/plugins/fastclick/fastclick.js"></script>
     <script src="{{ asset('vendor/adminlte') }}/dist/js/app.min.js"></script>
+    <script src="{{ asset('vendor/adminlte') }}/dist/js/angkasa.js"></script>
+    <script type="text/javascript" src="{{ asset('vendor/adminlte') }}/dist/js/jeasyui/jquery.easyui.min.js"></script>
 
     <!-- page script -->
     <script type="text/javascript">
