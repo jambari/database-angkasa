@@ -24,9 +24,7 @@ class CreateGempabumis extends Migration
             $table->text('lokasi');
             $table->boolean('terasa')->default(false);
             $table->text('dirasakan')->nullable();
-            $table->float('pga_z')->nullable(0);
-            $table->float('pga_ns')->nulable(0);
-            $table->float('pga_ew')->nullable(0);
+            $table->boolean('tsunami')->default(false);
             $table->char('sumber');
             $table->unique(array('tanggal', 'waktu','sumber'));
             $table->timestamps();

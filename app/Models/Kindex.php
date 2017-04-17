@@ -46,7 +46,10 @@ class Kindex extends Model
 	| ACCESORS
 	|--------------------------------------------------------------------------
 	*/
-
+	public function getTanggalAttribute($value)
+	{
+		return date("d-m-Y", strtotime($value));
+	}
     /*
 	|--------------------------------------------------------------------------
 	| MUTATORS

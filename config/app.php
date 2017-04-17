@@ -181,6 +181,9 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Felixkiss\UniqueWithValidator\UniqueWithValidatorServiceProvider::class,
         Fx3costa\LaravelChartJs\Providers\ChartjsServiceProvider::class,
+        MaddHatter\LaravelFullcalendar\ServiceProvider::class,
+        Yajra\Datatables\DatatablesServiceProvider::class,
+        Anam\PhantomMagick\ConverterServiceProvider::class,
         //
 
         /*
@@ -243,6 +246,9 @@ return [
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
+        'Calendar' => MaddHatter\LaravelFullcalendar\Facades\Calendar::class,
+        'Datatables' => Yajra\Datatables\Facades\Datatables::class,
+        'Converter' => Anam\PhantomMagick\Facades\Converter::class,
 
     ],
 

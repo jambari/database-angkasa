@@ -15,8 +15,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/display', function () {
+    return view('welcome');
+});
+
+//Download LAPENDA
+
+
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 {
+    Route::get('/dashboard', 'DashboardController@index');
     Route::group(['prefix' => 'pengamatan'], function(){
             //GEMPABUMI
         CRUD::resource('gempabumi', 'Admin\GempabumiCrudController');
@@ -37,6 +45,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
         //KU
         CRUD::resource('spm', 'Admin\SpmCrudController');
+        CRUD::resource('kah', 'Admin\KahCrudController');
         CRUD::resource('hujan', 'Admin\HujanCrudController');
 
         // IMPORT DATA
@@ -53,16 +62,32 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
         Route::get('/import/magnetbumi', function(){
             return view('magnetbumi.importmagnetbumi');
         });
+
+        Route::get('/calendar', 'CalendarController@index');
+        //DASHBOARD
+        Route::get('dashboard', 'CalendarController@index');
+        //LAPENDA
+        Route::get('lapenda', 'Admin\GempabumiCrudController@lapenda');
+        Route::get('lapenda/data', 'Admin\GempabumiCrudController@getLapenda')->name('lapenda');
         Route::post('/import/magnetbumi/excel', [
             'as' => 'import.magnetbumi',
             'uses' => 'MagnetbumiController@importExcel'
         ]);
 
-        //Jadwal SPM
-        CRUD::resource('jadwal-spm', 'Admin\JadwalspmCrudController');
-        //Jadwal KAH
-        CRUD::resource('jadwal-kah', 'Admin\JadwalkahCrudController');
+        //events
+        CRUD::resource('event', 'Admin\EventCrudController');
         //CHECK LIST
         CRUD::resource('checklist-accelerograph', 'Admin\ChecklistacceCrudController');
+        CRUD::resource('checklist-seismic', 'Admin\ChecklistseismicCrudController');
+        CRUD::resource('checklist-ld', 'Admin\ChecklistldCrudController');
+        CRUD::resource('checklist-bmkgsoft', 'Admin\ChecklistbmkgsoftCrudController');
+        CRUD::resource('checklist-seiscomp3', 'Admin\ChecklistseiscompCrudController');
+
+        // LAPENDA UNDUH
+        Route::get('lapenda/unduh/{id}/{rownum}', 'Admin\GempabumiCrudController@unduh');
+        Route::get('gempabumi/{id}/peta', 'Admin\GempabumiCrudController@peta');
+        Route::get('gempabumi/{id}/unduhpeta', 'Admin\GempabumiCrudController@unduhpeta');
+        Route::get('lapenda/pdf/{id}/{rownum}', 'Admin\GempabumiCrudController@pdf');
+
     });
 });

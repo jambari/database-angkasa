@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use App\Models\Gempabumi;
+use App\Models\Lapenda;
 use Excel;
 use Validator;
 use Alert;
+use Yajra\Datatables\Datatables;
+use Yajra\Datatables\Html\Builder;
+use Anam\PhantomMagick\Converter;
+
 
 // VALIDATION: change the requests to match your own file names if you need form validation
 use App\Http\Requests\StoreGempabumiRequest as StoreRequest;
@@ -66,30 +72,15 @@ class GempabumiCrudController extends CrudController {
                 'name' => 'dirasakan',
                 'label' => 'Intensitas',
                 'type' =>'text'
-            ],
-            [
-                'name' => 'pga_z',
-                'label' => 'PGA Z',
-                'type' =>'text',
-                'value' => '0.0'
-            ],
-            [
-                'name' => 'pga_ns',
-                'label' => 'PGA NS',
-                'type' =>'text',
-                'value' => '0.0'
-            ],
-            [
-                'name' => 'pga_ew',
-                'label' => 'PGA EW',
-                'type' =>'text',
-                'value' => '0.0'
-            ],
-            [
+            ],  [
+                'name' => 'tsunami',
+                'label' => 'Tsunami',
+                'type' => 'checkbox'
+            ], [
                 'name' => 'sumber',
                 'label' => 'sumber',
                 'type' => 'select_from_array',
-                'options' => ['seicomp3'=> 'Seiscomp3', 'pgr 5'=>'PGR 5','jamstec' => 'Jamstec']
+                'options' => ['seicomp3'=> 'Seiscomp3', 'pgr 5'=>'PGR 5','jamstec' => 'Jamstec', 'pgn' => 'PGN']
             ]
         ];
 
@@ -100,7 +91,7 @@ class GempabumiCrudController extends CrudController {
         // $this->crud->removeFields($array_of_names, 'update/create/both');
 
         // ------ CRUD COLUMNS
-        // $this->crud->addColumn(); // add a single column, at the end of the stack
+        $this->crud->addColumn('peta'); // add a single column, at the end of the stack
         //$this->crud->addColumns(); // add multiple columns, at the end of the stack
         // $this->crud->removeColumn('column_name'); // remove a column from the stack
         //$this->crud->removeColumns(['pga_z', 'pga_ns', 'pga_ew', 'id_gempabumi']); // remove an array of columns from the stack
@@ -113,22 +104,21 @@ class GempabumiCrudController extends CrudController {
         $this->crud->setColumnDetails('kedalaman', ['label' => 'Kedalaman']);
         $this->crud->setColumnDetails('terasa', ['label' => 'Dirasakan']);
         $this->crud->setColumnDetails('dirasakan', ['label' => 'Intensitas']);
+        $this->crud->setColumnDetails('tsunami', ['label' => 'Tsunami']);
         $this->crud->setColumnDetails('sumber', ['label' => 'Sumber']);
-        $this->crud->setColumnDetails('pga_z', ['label' => 'Z']);
-        $this->crud->setColumnDetails('pga_ns', ['label' => 'NS']);
-        $this->crud->setColumnDetails('pga_ew', ['label' => 'EW']);
         // $this->crud->setColumnsDetails(['column_1', 'column_2'], ['attribute' => 'value']);
         
         // ------ CRUD BUTTONS
         // possible positions: 'beginning' and 'end'; defaults to 'beginning' for the 'line' stack, 'end' for the others;
         // $this->crud->addButton($stack, $name, $type, $content, $position); // add a button; possible types are: view, model_function
         // $this->crud->addButtonFromModelFunction($stack, $name, $model_function_name, $position); // add a button whose HTML is returned by a method in the CRUD model
-        // $this->crud->addButtonFromView($stack, $name, $view, $position); // add a button whose HTML is in a view placed at resources\views\vendor\backpack\crud\buttons
+        $this->crud->addButtonFromView('line', 'peta' , 'peta', 'end');
+        $this->crud->addButtonFromView('line', 'unduhpeta' , 'unduhpeta', 'end'); // add a button whose HTML is in a view placed at resources\views\vendor\backpack\crud\buttons
         // $this->crud->removeButton($name);
         // $this->crud->removeButtonFromStack($name, $stack);
 
         // ------ CRUD ACCESS
-        // $this->crud->allowAccess(['list', 'create', 'update', 'reorder', 'delete']);
+        $this->crud->allowAccess(['list', 'create', 'update', 'reorder', 'delete', 'peta']);
         // $this->crud->denyAccess(['list', 'create', 'update', 'reorder', 'delete']);
 
         // ------ CRUD REORDER
@@ -161,7 +151,8 @@ class GempabumiCrudController extends CrudController {
         // ------ ADVANCED QUERIES
         // $this->crud->addClause('active');
         // $this->crud->addClause('type', 'car');
-        // $this->crud->addClause('where', 'name', '==', 'car');
+        $tahun = date('Y');
+        $this->crud->addClause('where', 'tanggal', 'like', '%'.$tahun.'%');
         // $this->crud->addClause('whereName', 'car');
         // $this->crud->addClause('whereHas', 'posts', function($query) {
         //     $query->activePosts();
@@ -225,9 +216,6 @@ class GempabumiCrudController extends CrudController {
                     'lokasi' => $row['lokasi'],
                     'terasa' => $row['terasa'],
                     'dirasakan' => $row['dirasakan'],
-                    'pga_z' => $row['pga_z'],
-                    'pga_ns' => $row['pga_ns'],
-                    'pga_ew' => $row['pga_ew'],
                     'sumber' => $row['sumber']
                     ]
                 ;
@@ -240,5 +228,113 @@ class GempabumiCrudController extends CrudController {
         }
         \Alert::success('Berhasil mengimport data')->flash();
         return redirect('admin/pengamatan/gempabumi');
+    }
+    public function lapenda(Request $request, Builder $builder)
+    {
+        $html = $builder->columns([
+                ['data' => 'no', 'name' => 'no', 'title' => 'Nomor'],
+                ['data'=> 'tanggal', 'name' => 'tanggal', 'title' => 'Tanggal'],
+                ['data' => 'waktu', 'name' => 'waktu', 'title' => 'Origin'],
+                ['data' => 'lintang', 'name' => 'lintang', 'title' => 'Lintang'],
+                ['data' => 'bujur', 'name' => 'bujur', 'title' => 'Bujur'],
+                ['data' => 'magnitudo', 'name' => 'magnitudo', 'title' => 'Magnitudo'],
+                ['data' => 'kedalaman', 'name' => 'kedalaman', 'title' => 'Kedalaman']
+            ]);
+        return view('gempabumi.lapenda', compact('html'));
+    }
+    public function getLapenda(Request $request)
+    {
+        DB::statement(DB::raw('set @rownum=0'));
+        $ini = date('Y');
+        $lapendas = Lapenda::select([
+            DB::raw('@rownum  := @rownum  + 1 AS rownum'),
+            'id',
+            'tanggal',
+            'waktu',
+            'lintang',
+            'bujur',
+            'magnitudo',
+            'kedalaman',
+            'lokasi',
+            'dirasakan',
+            'tsunami',
+            'created_at'])->where('terasa', '=', '1')->where('tanggal', 'like', '%'.$ini.'%');
+        $datatables = Datatables::of($lapendas);
+
+        if ($keyword = $request->get('search')['value']) {
+            $datatables->filterColumn('rownum', 'whereRaw', '@rownum  + 1 like ?', ["%{$keyword}%"]);
+        }
+
+        return $datatables->addColumn('lihat', function ($lapenda) {
+                return '<a href="/admin/pengamatan/lapenda/unduh/'.$lapenda->id.'/'.$lapenda->rownum.'" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i> Lihat</a>';
+            })
+            //->editColumn('id', 'ID: {{$id}}')
+            ->addColumn('pdf', function ($lapenda) {
+                return '<a href="/admin/pengamatan/lapenda/pdf/'.$lapenda->id.'/'.$lapenda->rownum.'" class="btn btn-xs btn-primary"><i class="fa fa-file-pdf-o"></i> Pdf</a>';
+            })
+            //->editColumn('id', 'ID: {{$id}}')
+            ->make(true)
+        ;
+    }
+    // Lihat infogempa dengan peta GMT
+    public function unduh($id, $rownum)
+    {   
+        $rownum = $rownum;
+        $lapenda = Lapenda::find($id);
+        $event = Gempabumi::find($id);
+        $tahun = date_parse($event['created_at']);
+        $bulan = $tahun['month'];
+        $month = $bulan;
+        $tahun = $tahun['year'];
+        //$bulan = '4';
+        $file = fopen("/Users/jambari/Desktop/gmt_project/event.gmt","w");
+        $tanggal = date_parse($event['tanggal']);
+        $waktu = date_parse($event['waktu']);
+        $name = $event['id'].$tanggal['year'].$tanggal['month'].$tanggal['day'].$waktu['hour'].$waktu['minute'].$waktu['second'];
+        $koordinat = $event['bujur']." ".$event['lintang']." ".$id;
+        fwrite($file,$koordinat);
+        fclose($file);
+        $test = shell_exec('cd /Users/jambari/Desktop/gmt_project && sh ./autoepic.sh');
+        return view('gempabumi.unduh')->with(compact('lapenda','tahun','month','rownum'));
+    }
+    //Lihat Peta infogempa
+    public function peta($id)
+    {   
+        //$rownum = $rownum;
+        $lapenda = Lapenda::find($id);
+        $event = Gempabumi::find($id);
+        $tahun = date_parse($event['created_at']);
+        $bulan = $tahun['month'];
+        $month = $bulan;
+        $hari = $tahun['day'];
+        $tahun = $tahun['year'];
+        $tahun = str_split($tahun);
+        $tahun = $tahun[2].$tahun[3];
+        //$bulan = '4';
+        $file = fopen("/Users/jambari/Desktop/gmt_project/event.gmt","w");
+        $tanggal = date_parse($event['tanggal']);
+        $waktu = date_parse($event['waktu']);
+        $name = $event['id'].$tanggal['year'].$tanggal['month'].$tanggal['day'].$waktu['hour'].$waktu['minute'].$waktu['second'];
+        $koordinat = $event['bujur']." ".$event['lintang']." ".$id;
+        fwrite($file,$koordinat);
+        fclose($file);
+        $test = shell_exec('cd /Users/jambari/Desktop/gmt_project && sh ./autoepic.sh');
+        return view('gempabumi.peta')->with(compact('lapenda','tahun','month','hari'));
+    }
+    // Unduh peta infogempa
+    public function unduhpeta($id)
+    {   //'office.dev/admin/pengamatan/gempabumi/'.$id.'/peta'
+        Converter::make('office.dev/admin/pengamatan/gempabumi/'.$id.'/peta')
+        //->setPath('/usr/local/bin/phantomjs')
+        ->toPng()
+        ->download('infogemppa.png');
+    }
+    //download lapenda.pdf
+    public function pdf($id, $rownum)
+    {   //'office.dev/admin/pengamatan/gempabumi/'.$id.'/peta'
+        Converter::make('/admin/pengamatan/lapenda/pdf/'.$id.'/'.$rownum)
+        //->setPath('/usr/local/bin/phantomjs')
+        ->toPdf()
+        ->download('lapenda.pdf');
     }
 }

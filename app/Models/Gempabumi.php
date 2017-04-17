@@ -20,10 +20,10 @@ class Gempabumi extends Model
     //protected $primaryKey = 'id';
     // public $timestamps = false;
     // protected $guarded = ['id'];
-    protected $fillable = ['tanggal','waktu','lintang','bujur','magnitudo', 'kedalaman', 'lokasi','terasa','dirasakan','pga_z', 'pga_ns', 'pga_ew', 'sumber'];
+    protected $fillable = ['tanggal','waktu','lintang','bujur','magnitudo', 'kedalaman', 'lokasi','terasa','dirasakan', 'tsunami', 'sumber'];
     // protected $hidden = [];
     // protected $dates = [];
-
+    //protected $dateFormat = 'd-m-Y';
     /*
 	|--------------------------------------------------------------------------
 	| FUNCTIONS
@@ -57,6 +57,18 @@ class Gempabumi extends Model
 			return $value;
 		}
 	}
+
+	//Asesor tsunami
+	public function getTsunamiAttribute($value)
+	{
+		if ($value==0) {
+			$value = 'Tidak';
+			return $value;
+		} else {
+			$value = 'Berpotensi';
+			return $value;
+		}
+	}
     /*
 	|--------------------------------------------------------------------------
 	| MUTATORS
@@ -66,13 +78,9 @@ class Gempabumi extends Model
 	{
 		return view('Gempabumi.importgempa');
 	}
-
-	public function setIdGempabumiAttribute($value)
+	public function getTanggalAttribute($value)
 	{
-		$tanggal = $this->attributes['tanggal'];
-		$waktu = $this->attributes['waktu'];
-		$this->attributes['id_gempabumi'] = strtolower($value).$tanggal.'-'.$waktu;
-		//
+		return date("d-m-Y", strtotime($value));
 	}
 
 }

@@ -7,7 +7,7 @@
 				</div>
 				<div class="box-body">
 					<div>
-						<p class="text-center label-primary">Grafik Komponen F tanggal {{ $komponenhf->tanggal }}</p>
+						<p class="text-center label-primary">Grafik Komponen F tanggal {{ $komponenf->tanggal }}</p>
 					</div>
 					<div class="chart">
 						<canvas id="chartKompd" ></canvas>

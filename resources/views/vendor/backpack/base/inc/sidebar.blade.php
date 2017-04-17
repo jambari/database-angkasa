@@ -6,7 +6,7 @@
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="" class="img-circle" alt="User Image">
+                <img src="{{ asset('uploads/2016/tatausaha/pegawai/foto/lidya.jpg') }}" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
                 <p>{{ Auth::user()->name }}</p>
@@ -31,6 +31,12 @@
                     </li>
                     <li>
                         <a href="{{ url('admin/pengamatan/import/gempabumi') }}"><i class="wi wi-earthquake"></i> <span>Import Gempabumi</span></a>
+                    </li>
+                    <li>
+                        <a href="{{ url('admin/pengamatan/lapenda') }}"><i class="wi wi-earthquake"></i> <span>Lapenda</span></a>
+                    </li>
+                    <li>
+                        <a href="{{ url('admin/pengamatan/accelero') }}"><i class="wi wi-earthquake"></i> <span>Accelero</span></a>
                     </li>
                 </ul>
             </li>
@@ -70,74 +76,72 @@
                     <li><a href="{{ url('admin/pengamatan/spm') }}"><i class="wi wi-cloud"></i><span> SPM</span></a></li>
                 </ul>
             </li>
-            <li class="treeview">
-                <a href="#"><i class="fa fa-th-list"></i> <span>Jadwal</span></a>
-                <ul class="treeview-menu">
-                    <li class=""><a href="{{ url('admin/pengamatan/jadwal-spm') }}"><i class="fa fa-th-list"></i> <span>Pengambilan sampel debu</span></a></li>
-                    <li class=""><a href="{{ url('admin/pengamatan/jadwal-kah') }}"><i class="fa fa-th-list"></i> <span>Pengambilan sampel air hujan</span></a></li>
-                </ul>
-            </li>
-            <li class="treeview">
-                <a href="#"><i class="fa fa-tasks"></i> <span>Check list Peralatan</span></a>
-                <ul class="treeview-menu">
-                    <li class=""><a href="{{ url('admin/pengamatan/checklist-accelerograph') }}"><i class="fa fa-tasks"></i> <span>Accelerograph</span></a></li>
-                    <li class=""><a href=""><i class="fa fa-tasks"></i> <span>Pengambilan sampel air hujan</span></a></li>
-                </ul>
-            </li>
-            @endrole
-            <li><a href="{{ url('admin/page') }}"><i class="fa fa-file-o"></i> <span>Pages</span></a></li>
-            <!--FILE MANAGER-->
-            <li><a href="{{ url(config('backpack.base.route_prefix', 'admin') . '/elfinder') }}"><i class="fa fa-files-o"></i> <span>File manager</span></a></li>
-            {{-- TATA USAHA --}}
-            @role('tatausaha')
-            <li class="treeview">
-                <a href="#"><i class="fa fa-magnet"></i><span>Tata Usaha</span><i class="fa fa-angle-left pull-right"></i></a>
-                <ul class="treeview-menu">
-                    <li><a href="{{ url('admin/pengamatan/komponen-h') }}"><i class="fa fa-magnet"></i><span>Surat Masuk</span></a></li>
-                    <li><a href="{{ url('admin/pengamatan/komponen-d') }}"><i class="fa fa-magnet"></i><span>Surat Keluar</span></a></li>
-                    <li><a href="{{ url('admin/pengamatan/komponen-i') }}"><i class="fa fa-magnet"></i><span>Diklat</span></a></li>
-                    <li><a href="{{ url('admin/pengamatan/komponen-z') }}"><i class="fa fa-magnet"></i><span>Tugas Belajar</span></a></li>
-                    <li><a href="{{ url('admin/pengamatan/komponen-f') }}"><i class="fa fa-magnet"></i><span></span></a></li>
-                    <li><a href="{{ url('admin/pengamatan/k-index') }}"><i class="fa fa-magnet"></i><span>K Index</span></a></li>
-                    <li><a href="{{ url('admin/pengamatan/prekursor') }}"><i class="fa fa-magnet"></i><span>Prekursor</span></a></li>
-                    <li><a href="{{ url('admin/pengamatan/absolut') }}"><i class="fa fa-magnet"></i><span>Absolut</span></a></li>
-                    <li>
-                        <a href="{{ url('admin/pengamatan/import/magnetbumi') }}"><i class="fa fa-magnet"></i> <span>Import Data Magnetbumi</span></a>
-                    </li>
-                </ul>
-            </li>
-            @endrole
-            <!--MENU KHUSU ADMIN-->
-            @role('admin')
-            <li class="treeview">
-                <a href="#"><i class="fa fa-cgs"></i><span>Advanced</span> <i class="fa fa-angle-left pull-right"></i></a>
-                <ul class="treeview-menu">
-                    <li><a href="{{ url('admin/backup') }}"><i class="fa fa-hdd-o"></i> <span>Backups</span></a></li>
-                    <li><a href="{{ url('admin/log') }}"><i class="fa fa-terminal"></i> <span>Logs</span></a></li>
-                    <li><a href="{{ url('admin/setting') }}"><i class="fa fa-cog"></i> <span>Settings</span></a></li>
-                </ul>
-            </li>
-            <li class="treeview">
-                <a href="#"><i class="fa fa-group"></i> <span>Users, Roles, Permissions</span> <i class="fa fa-angle-left pull-right"></i></a>
-                <ul class="treeview-menu">
-                    <li><a href="{{ url('admin/user') }}"><i class="fa fa-user"></i> <span>Users</span></a></li>
-                    <li><a href="{{ url('admin/role') }}"><i class="fa fa-group"></i> <span>Roles</span></a></li>
-                    <li><a href="{{ url('admin/permission') }}"><i class="fa fa-key"></i> <span>Permissions</span></a></li>
-                </ul>
-            </li>
-            <li class="treeview">
-                <a href="#"><i class="fa fa-globe"></i> <span>Translations</span> <i class="fa fa-angle-left pull-right"></i></a>
-                <ul class="treeview-menu">
-                    <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/language') }}"><i class="fa fa-flag-checkered"></i> Languages</a></li>
-                    <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/language/texts') }}"><i class="fa fa-language"></i> Site texts</a></li>
-                </ul>
-            </li>
-            @endrole
-            <!-- ======================================= -->
-            <li class="header">{{ trans('backpack::base.user') }}</li>
-            <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/logout') }}"><i class="fa fa-sign-out"></i> <span>{{ trans('backpack::base.logout') }}</span></a></li>
-        </ul>
-    </section>
-    <!-- /.sidebar -->
+            <li class=""><a href="{{ url('admin/pengamatan/event') }}"><i class="fa fa-th-list"></i> <span>Jadwal Kegiatan</span></a></li>
+        </li>
+        <li class="treeview">
+            <a href="#"><i class="fa fa-check"></i> <span>Checklist Peralatan</span></a>
+            <ul class="treeview-menu">
+                <li class=""><a href="{{ url('admin/pengamatan/checklist-accelerograph') }}"><i class="fa fa-check"></i> <span>Accelerograph</span></a></li>
+                <li class=""><a href="{{ url('admin/pengamatan/checklist-seismic') }}"><i class="fa fa-check"></i> <span>Checkist Stasiun Seismic</span></a></li>
+                <li class=""><a href="{{ url('admin/pengamatan/checklist-seiscomp3') }}"><i class="fa fa-check"></i> <span>Checkist Seiscomp3</span></a></li>
+                <li class=""><a href="{{ url('admin/pengamatan/checklist-ld') }}"><i class="fa fa-check"></i> <span>Checkist LD2000</span></a></li>
+                <li class=""><a href="{{ url('admin/pengamatan/checklist-bmkgsoft') }}"><i class="fa fa-check"></i> <span>Checkist BMKGSoft</span></a></li>
+            </ul>
+        </li>
+        @endrole
+        <li><a href="{{ url('admin/page') }}"><i class="fa fa-file-o"></i> <span>Pages</span></a></li>
+        <!--FILE MANAGER-->
+        <li><a href="{{ url(config('backpack.base.route_prefix', 'admin') . '/elfinder') }}"><i class="fa fa-files-o"></i> <span>File manager</span></a></li>
+        {{-- TATA USAHA --}}
+        @role('tatausaha')
+        <li class="treeview">
+            <a href="#"><i class="fa fa-magnet"></i><span>Tata Usaha</span><i class="fa fa-angle-left pull-right"></i></a>
+            <ul class="treeview-menu">
+                <li><a href="{{ url('admin/pengamatan/komponen-h') }}"><i class="fa fa-magnet"></i><span>Surat Masuk</span></a></li>
+                <li><a href="{{ url('admin/pengamatan/komponen-d') }}"><i class="fa fa-magnet"></i><span>Surat Keluar</span></a></li>
+                <li><a href="{{ url('admin/pengamatan/komponen-i') }}"><i class="fa fa-magnet"></i><span>Diklat</span></a></li>
+                <li><a href="{{ url('admin/pengamatan/komponen-z') }}"><i class="fa fa-magnet"></i><span>Tugas Belajar</span></a></li>
+                <li><a href="{{ url('admin/pengamatan/komponen-f') }}"><i class="fa fa-magnet"></i><span></span></a></li>
+                <li><a href="{{ url('admin/pengamatan/k-index') }}"><i class="fa fa-magnet"></i><span>K Index</span></a></li>
+                <li><a href="{{ url('admin/pengamatan/prekursor') }}"><i class="fa fa-magnet"></i><span>Prekursor</span></a></li>
+                <li><a href="{{ url('admin/pengamatan/absolut') }}"><i class="fa fa-magnet"></i><span>Absolut</span></a></li>
+                <li>
+                    <a href="{{ url('admin/pengamatan/import/magnetbumi') }}"><i class="fa fa-magnet"></i> <span>Import Data Magnetbumi</span></a>
+                </li>
+            </ul>
+        </li>
+        @endrole
+        <!--MENU KHUSU ADMIN-->
+        @role('admin')
+        <li class="treeview">
+            <a href="#"><i class="fa fa-cgs"></i><span>Advanced</span> <i class="fa fa-angle-left pull-right"></i></a>
+            <ul class="treeview-menu">
+                <li><a href="{{ url('admin/backup') }}"><i class="fa fa-hdd-o"></i> <span>Backups</span></a></li>
+                <li><a href="{{ url('admin/log') }}"><i class="fa fa-terminal"></i> <span>Logs</span></a></li>
+                <li><a href="{{ url('admin/setting') }}"><i class="fa fa-cog"></i> <span>Settings</span></a></li>
+            </ul>
+        </li>
+        <li class="treeview">
+            <a href="#"><i class="fa fa-group"></i> <span>Users, Roles, Permissions</span> <i class="fa fa-angle-left pull-right"></i></a>
+            <ul class="treeview-menu">
+                <li><a href="{{ url('admin/user') }}"><i class="fa fa-user"></i> <span>Users</span></a></li>
+                <li><a href="{{ url('admin/role') }}"><i class="fa fa-group"></i> <span>Roles</span></a></li>
+                <li><a href="{{ url('admin/permission') }}"><i class="fa fa-key"></i> <span>Permissions</span></a></li>
+            </ul>
+        </li>
+        <li class="treeview">
+            <a href="#"><i class="fa fa-globe"></i> <span>Translations</span> <i class="fa fa-angle-left pull-right"></i></a>
+            <ul class="treeview-menu">
+                <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/language') }}"><i class="fa fa-flag-checkered"></i> Languages</a></li>
+                <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/language/texts') }}"><i class="fa fa-language"></i> Site texts</a></li>
+            </ul>
+        </li>
+        @endrole
+        <!-- ======================================= -->
+        <li class="header">{{ trans('backpack::base.user') }}</li>
+        <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/logout') }}"><i class="fa fa-sign-out"></i> <span>{{ trans('backpack::base.logout') }}</span></a></li>
+    </ul>
+</section>
+<!-- /.sidebar -->
 </aside>
 @endif

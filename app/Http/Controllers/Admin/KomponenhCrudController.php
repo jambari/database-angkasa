@@ -139,7 +139,7 @@ class KomponenhCrudController extends CrudController {
         // $this->crud->removeFields($array_of_names, 'update/create/both');
 
         // ------ CRUD COLUMNS
-        // $this->crud->addColumn(); // add a single column, at the end of the stack
+        $this->crud->addColumn('avg'); // add a single column, at the end of the stack
         //$this->crud->addColumns($fields); // add multiple columns, at the end of the stack
         // $this->crud->removeColumn('column_name'); // remove a column from the stack
         //$this->crud->removeColumns(['jam08', 'jam09', 'jam10', 'jam11', 'jam12', 'jam13', 'jam14', 'jam15', 'jam16', 'jam17', 'jam18', 'jam19', 'jam20', 'jam21', 'jam22', 'jam23']); // remove an array of columns from the stack
@@ -167,6 +167,8 @@ class KomponenhCrudController extends CrudController {
         $this->crud->setColumnDetails('jam21', ['label' => '21']);
         $this->crud->setColumnDetails('jam22', ['label' => '22']);
         $this->crud->setColumnDetails('jam23', ['label' => '23']);
+        $this->crud->setColumnDetails('avg', ['label' => 'rata-rata']);
+
         //$this->crud->setColumnsDetails(['jam00', 'jam01'], ['label' => '00-01', 'label'=>'01-02']);
         
         // ------ CRUD BUTTONS

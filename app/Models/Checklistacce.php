@@ -98,6 +98,10 @@ class Checklistacce extends Model
 			return $value;
 		}
 	}
+	public function getTanggalAttribute($value)
+	{
+		return date("d-m-Y", strtotime($value));
+	}
     /*
 	|--------------------------------------------------------------------------
 	| MUTATORS

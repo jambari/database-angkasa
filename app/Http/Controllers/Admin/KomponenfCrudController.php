@@ -140,7 +140,7 @@ class KomponenfCrudController extends CrudController {
         // $this->crud->removeFields($array_of_names, 'update/create/both');
 
         // ------ CRUD COLUMNS
-        // $this->crud->addColumn(); // add a single column, at the end of the stack
+        $this->crud->addColumn('avg'); // add a single column, at the end of the stack
         // $this->crud->addColumns(); // add multiple columns, at the end of the stack
         // $this->crud->removeColumn('column_name'); // remove a column from the stack
         // $this->crud->removeColumns(['column_name_1', 'column_name_2']); // remove an array of columns from the stack
@@ -171,6 +171,7 @@ class KomponenfCrudController extends CrudController {
         $this->crud->setColumnDetails('jam21', ['label' => '21']);
         $this->crud->setColumnDetails('jam22', ['label' => '22']);
         $this->crud->setColumnDetails('jam23', ['label' => '23']);
+        $this->crud->setColumnDetails('avg', ['label' => 'rata-rata']);
         // ------ CRUD BUTTONS
         // possible positions: 'beginning' and 'end'; defaults to 'beginning' for the 'line' stack, 'end' for the others;
         // $this->crud->addButton($stack, $name, $type, $content, $position); // add a button; possible types are: view, model_function
