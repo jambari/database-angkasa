@@ -16,7 +16,13 @@
               <img src="http://office.dev/images/lapenda.png" alt="lokasi_gempa">
             </div>
             <div class="card-content">
-              <p>Info Gempa Mag: {{ $lapenda->magnitudo }} SR, {{ $hari }}-						@if ($month == '1')
+				<div class="row">
+					<div class="col s12 m3">
+						              <img class="center-align" border="0" src="{{ asset('images') }}/logo_bmg.gif" width="70" height="70">
+              <p class="center-align"><strong>BMKG</strong> </p>
+					</div>
+					<div class="col s12 m9">
+						              <p class="left-align">Info Gempa Mag: {{ $lapenda->magnitudo }} SR, {{ $hari }}-						@if ($month == '1')
 						Jan
 						@elseif ($month == '2')
 						Feb
@@ -41,13 +47,12 @@
 						@else
 						Des
 						@endif-{{ $tahun }} {{ $lapenda->waktu }} WIT, Lok: {{ $lapenda->lintang }} - {{ $lapenda->bujur}} ({{ $lapenda->lokasi }}), Kedlmn: {{ $lapenda->kedalaman }} km :: BMKG-JAY</p>
+					</div>
+				</div>
             </div>
-            <div class="card-action">
-              <img border="0" src="{{ asset('images') }}/logo_bmg.gif" width="92" height="92">
-              <p><strong>BMKG</strong>
-				<hr><strong>Stasiun Geofisika Angkasapura - Jayapura</strong>
-              </p>
-            </div>
+		{{--             <div class="card-action">
+				<strong>Stasiun Geofisika Angkasapura - Jayapura</strong>
+            </div> --}}
           </div>
         </div>
       </div>
