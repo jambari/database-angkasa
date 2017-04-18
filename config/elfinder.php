@@ -27,6 +27,7 @@ return [
     */
     'disks' => [
         // 'uploads',
+        'data'
     ],
 
     /*

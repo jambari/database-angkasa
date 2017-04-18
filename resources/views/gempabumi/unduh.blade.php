@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<title></title>
 		<link rel="stylesheet" href="">
 	</head>
@@ -70,7 +71,7 @@
 						@else
 						XII
 						@endif
-					 {{ $tahun }}</td>
+					 / {{ $tahun }}</td>
 				</tr>
 			</table>
 		</div>
@@ -155,8 +156,8 @@
 				</tr>
 			</table>
 		</div>
-		<div id="peta" align="center" style="margin-top: 20px;">
-			<img src="http://office.dev/images/lapenda.png" width="480px" height="300px" alt="lokasi_gempa">
+		<div align="center" style="margin-top: 20px;">
+			<img src="{{ asset('images') }}/lapenda.png" width="480px" height="300px" alt="lokasi_gempa">
 		</div>
 		<div align="center"><br>
 			<table border="0" cellpadding="0" cellspacing="0" width="600">
@@ -174,7 +175,7 @@
 		</div>
 		</font>
 		<p>&nbsp;</p>
-		<div align="center" id="bawah">
+		<div align="center">
 			<table border="0" cellpadding="0" cellspacing="0" width="700" height="77">
 				<tr>
 					<td width="14" height="16"></td>
@@ -207,7 +208,7 @@
 				<tr>
 					<td width="14" height="16"></td>
 					<td width="212" height="16"></td>
-					<td align="center" width="368" height="16"><FONT face="Times New Roman"> &nbsp;Cahyo Nugroho, S.E, S.Si</td>
+					<td align="center" width="368" height="16"><FONT face="Times New Roman"> &nbsp;<u>Cahyo Nugroho, S.E, S.Si</u></td>
 				</tr>
 				<tr>
 					<td width="14" height="16"></td>

@@ -56,7 +56,29 @@ return [
 
         'uploads' => [
             'driver' => 'local',
-            'root' => '/User/jambari/Desktop',
+            'root' => public_path('uploads'),
+            'accessControl' => 'access',
+            'attributes' => array(
+                'pattern' => '/.+/',
+                'read' => true,
+                'write' => false,
+                'locked' => true,
+                'hidden' => false
+            )
+        ],
+
+        'data' => [
+            'driver' => 'local',
+            'root' => '/Users/jambari/Desktop',
+            'attributes' => array(
+                array(
+                    'pattern' => '/^./',
+                    'read' => true,
+                    'write' => false,
+                    'locked' => false,
+                    'hidden' => false
+                )
+            )
         ],
 
         'backups' => [

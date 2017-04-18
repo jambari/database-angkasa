@@ -32,7 +32,7 @@ class CgminusCrudController extends CrudController {
             [
                 'name' => 'tanggal',
                 'label' => 'Tanggal',
-                'type' => 'date',
+                'type' => 'date_picker',
             ], [
                 'name' => 'jam00',
                 'label' => '00-01',

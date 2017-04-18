@@ -31,14 +31,8 @@ class CegeCrudController extends CrudController {
         $fields = [
             [
                 'name' => 'tanggal',
-                'type' => 'date',
-                'label' => 'Date',
-                // optional:
-                //'date_picker_options' => [
-                  //    'todayBtn' => true,
-                    //  'format' => 'dd-mm-yyyy',
-                      //'language' => 'fr'
-                   //],
+                'type' => 'date_picker',
+                'label' => 'Tanggal'
             ],  [
                 'name' => 'jam00',
                 'label' => '00-01',

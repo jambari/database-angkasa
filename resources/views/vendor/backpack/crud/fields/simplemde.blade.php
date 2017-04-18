@@ -1,6 +1,7 @@
 <!-- Simple MDE - Markdown Editor -->
 <div @include('crud::inc.field_wrapper_attributes') >
     <label>{!! $field['label'] !!}</label>
+    @include('crud::inc.field_translatable_icon')
     <textarea
     	id="simplemde-{{ $field['name'] }}"
         name="{{ $field['name'] }}"
@@ -22,6 +23,11 @@
     {{-- FIELD CSS - will be loaded in the after_styles section --}}
     @push('crud_fields_styles')
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+        <style type="text/css">
+        .CodeMirror-fullscreen, .editor-toolbar.fullscreen {
+            z-index: 9999 !important;
+        }
+        </style>
     @endpush
 
     {{-- FIELD JS - will be loaded in the after_scripts section --}}

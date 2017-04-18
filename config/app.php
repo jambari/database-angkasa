@@ -184,6 +184,7 @@ return [
         MaddHatter\LaravelFullcalendar\ServiceProvider::class,
         Yajra\Datatables\DatatablesServiceProvider::class,
         Anam\PhantomMagick\ConverterServiceProvider::class,
+        Barryvdh\Snappy\ServiceProvider::class,
         //
 
         /*
@@ -249,6 +250,8 @@ return [
         'Calendar' => MaddHatter\LaravelFullcalendar\Facades\Calendar::class,
         'Datatables' => Yajra\Datatables\Facades\Datatables::class,
         'Converter' => Anam\PhantomMagick\Facades\Converter::class,
+        //'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
 
     ],
 

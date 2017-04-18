@@ -12,6 +12,8 @@ use Alert;
 use Yajra\Datatables\Datatables;
 use Yajra\Datatables\Html\Builder;
 use Anam\PhantomMagick\Converter;
+use PDF;
+use SnappyImage;
 
 
 // VALIDATION: change the requests to match your own file names if you need form validation
@@ -42,7 +44,7 @@ class GempabumiCrudController extends CrudController {
             [   // DateTime
                 'name' => 'tanggal',
                 'label' => 'Tanggal',
-                'type' => 'date'
+                'type' => 'date_picker'
             ], [
                 'name' => 'waktu',
                 'label' => 'Pukul',
@@ -113,7 +115,7 @@ class GempabumiCrudController extends CrudController {
         // $this->crud->addButton($stack, $name, $type, $content, $position); // add a button; possible types are: view, model_function
         // $this->crud->addButtonFromModelFunction($stack, $name, $model_function_name, $position); // add a button whose HTML is returned by a method in the CRUD model
         $this->crud->addButtonFromView('line', 'peta' , 'peta', 'end');
-        $this->crud->addButtonFromView('line', 'unduhpeta' , 'unduhpeta', 'end'); // add a button whose HTML is in a view placed at resources\views\vendor\backpack\crud\buttons
+        //$this->crud->addButtonFromView('line', 'unduhpeta' , 'unduhpeta', 'end'); // add a button whose HTML is in a view placed at resources\views\vendor\backpack\crud\buttons
         // $this->crud->removeButton($name);
         // $this->crud->removeButtonFromStack($name, $stack);
 
@@ -177,8 +179,21 @@ class GempabumiCrudController extends CrudController {
 
     public function showDetailsRow($id)
     {
+        $lapenda = Lapenda::find($id);
+        $event = Gempabumi::find($id);
+        $tahun = date_parse($event['created_at']);
+        $bulan = $tahun['month'];
+        $month = $bulan;
+        $hari = $tahun['day'];
+        $tahun = $tahun['year'];
+        $tahun = str_split($tahun);
+        $tahun = $tahun[2].$tahun[3];
+        //$bulan = '4';
+        $file = fopen("/Users/jambari/Desktop/gmt_project/event.gmt","w");
+        $tanggal = date_parse($event['tanggal']);
+        $waktu = date_parse($event['waktu']);
         $gempas = $this->crud->getEntry($id);
-        return view('vendor.backpack.crud.gempabumi_details_row', compact('gempas'));
+        return view('vendor.backpack.crud.gempabumi_details_row', compact('gempas','lapenda','tahun','month','hari'));
     }
 
     public function importExcel(Request $request)
@@ -322,19 +337,28 @@ class GempabumiCrudController extends CrudController {
         return view('gempabumi.peta')->with(compact('lapenda','tahun','month','hari'));
     }
     // Unduh peta infogempa
-    public function unduhpeta($id)
-    {   //'office.dev/admin/pengamatan/gempabumi/'.$id.'/peta'
-        Converter::make('office.dev/admin/pengamatan/gempabumi/'.$id.'/peta')
-        //->setPath('/usr/local/bin/phantomjs')
-        ->toPng()
-        ->download('infogemppa.png');
-    }
+    // 
+    // 
     //download lapenda.pdf
     public function pdf($id, $rownum)
-    {   //'office.dev/admin/pengamatan/gempabumi/'.$id.'/peta'
-        Converter::make('/admin/pengamatan/lapenda/pdf/'.$id.'/'.$rownum)
-        //->setPath('/usr/local/bin/phantomjs')
-        ->toPdf()
-        ->download('lapenda.pdf');
+    {   
+        $rownum = $rownum;
+        $lapenda = Lapenda::find($id);
+        $event = Gempabumi::find($id);
+        $tahun = date_parse($event['created_at']);
+        $bulan = $tahun['month'];
+        $month = $bulan;
+        $tahun = $tahun['year'];
+        $file = fopen("/Users/jambari/Desktop/gmt_project/event.gmt","w");
+        $tanggal = date_parse($event['tanggal']);
+        $waktu = date_parse($event['waktu']);
+        $name = $event['id'].$tanggal['year'].$tanggal['month'].$tanggal['day'].$waktu['hour'].$waktu['minute'].$waktu['second'];
+        $koordinat = $event['bujur']." ".$event['lintang']." ".$id;
+        fwrite($file,$koordinat);
+        fclose($file);
+        $test = shell_exec('cd /Users/jambari/Desktop/gmt_project && sh ./autoepic.sh');
+        $data = compact('lapenda','tahun','month','rownum');
+        $pdf = PDF::loadView('gempabumi.unduh', $data);
+        return $pdf->download('lapenda.pdf');
     }
 }

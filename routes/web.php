@@ -88,6 +88,5 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
         Route::get('gempabumi/{id}/peta', 'Admin\GempabumiCrudController@peta');
         Route::get('gempabumi/{id}/unduhpeta', 'Admin\GempabumiCrudController@unduhpeta');
         Route::get('lapenda/pdf/{id}/{rownum}', 'Admin\GempabumiCrudController@pdf');
-
     });
 });

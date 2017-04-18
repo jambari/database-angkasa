@@ -31,7 +31,7 @@
         <div class="box-body table-responsive">
 
         {{-- Backpack List Filters --}}
-        @if ($crud->filters->count())
+        @if ($crud->filtersEnabled())
           @include('crud::inc.filters_navbar')
         @endif
 
@@ -122,15 +122,22 @@
 
 @section('after_styles')
   <!-- DATA TABLES -->
-    <link href="{{ asset('vendor/adminlte/plugins/datatables/dataTables.bootstrap.css') }}" rel="stylesheet" type="text/css" />
+  <link href="{{ asset('vendor/adminlte/plugins/datatables/dataTables.bootstrap.css') }}" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="{{ asset('vendor/backpack/crud/css/crud.css') }}">
+  <link rel="stylesheet" href="{{ asset('vendor/backpack/crud/css/form.css') }}">
+  <link rel="stylesheet" href="{{ asset('vendor/backpack/crud/css/list.css') }}">
 
   <!-- CRUD LIST CONTENT - crud_list_styles stack -->
   @stack('crud_list_styles')
 @endsection
 
 @section('after_scripts')
-	<!-- DATA TABLES SCRIPT -->
+  	<!-- DATA TABLES SCRIPT -->
     <script src="{{ asset('vendor/adminlte/plugins/datatables/jquery.dataTables.js') }}" type="text/javascript"></script>
+
+    <script src="{{ asset('vendor/backpack/crud/js/crud.js') }}"></script>
+    <script src="{{ asset('vendor/backpack/crud/js/form.js') }}"></script>
+    <script src="{{ asset('vendor/backpack/crud/js/list.js') }}"></script>
 
     @if ($crud->exportButtons())
     <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js" type="text/javascript"></script>
@@ -202,7 +209,7 @@
           "processing": true,
           "serverSide": true,
           "ajax": {
-              "url": "{{ url($crud->route.'/search').'?'.Request::getQueryString() }}",
+              "url": "{!! url($crud->route.'/search').'?'.Request::getQueryString() !!}",
               "type": "POST"
           },
           @endif
